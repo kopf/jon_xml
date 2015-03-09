@@ -35,10 +35,14 @@ def main(directory):
             xml = f.read()
         soup = BeautifulSoup(xml)
         for field in FIELDS:
-            try:
-                text = unicode(soup.find(field).contents[0])
-            except (AttributeError, IndexError):
-                text = ''
+            text = u''
+            xml = soup.find(field)
+            if xml:
+                for tag in xml.contents:
+                    try:
+                        text += unicode(tag)
+                    except (AttributeError, IndexError):
+                        pass
             if text.endswith(']]>'):
                 text = text[:-3]
             template = template.replace('{%s}' % field, text)
